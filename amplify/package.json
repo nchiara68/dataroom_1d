@@ -1,3 +1,6 @@
 {
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5"
+  }
 }
