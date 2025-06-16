@@ -18,11 +18,21 @@ const components = {
       <div style={{ 
         textAlign: 'center', 
         padding: '2rem 1rem 1rem 1rem',
-        backgroundColor: '#232F3E',
+        backgroundColor: '#002b4b',
         color: 'white'
       }}>
+        <img 
+          src="/toknar-logo.svg" 
+          alt="Toknar Logo" 
+          style={{ 
+            height: '48px',
+            width: 'auto',
+            marginBottom: '1rem',
+            objectFit: 'contain'
+          }} 
+        />
         <h1 style={{ margin: 0, fontSize: '1.8rem' }}>
-          📄 Data Room - Stage 1: Minimal Implementation
+          📄 Data Room - Onboarding
         </h1>
         <p style={{ margin: '0.5rem 0 0 0', opacity: 0.8 }}>
           Secure file uploads and management
@@ -38,7 +48,7 @@ const components = {
         fontSize: '0.8rem',
         color: '#6C757D'
       }}>
-        📄 Minimal Data Room | Stage 1: Core Functionality
+         📄 Data Room | Onboarding | Toknar © 2025
       </div>
     );
   }
@@ -122,6 +132,7 @@ function Stage1Interface() {
     }
   }, [refreshKey, user.username]);
 
+  /* 
   // 🔍 Debug Stage 1
   const debugStage1 = async () => {
     console.log('🔍 Starting Stage 1 Debug Tests...');
@@ -164,6 +175,7 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
       alert(`❌ Debug Test Failed:\n\n${error instanceof Error ? error.message : 'Unknown error'}\n\nCheck console for details.`);
     }
   };
+  */
 
   // 🎯 Initial load effect
   useEffect(() => {
@@ -269,6 +281,7 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
     }
   };
 
+  /* 
   // 💾 Export data
   const exportData = () => {
     const data = {
@@ -292,6 +305,7 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
     
     alert('✅ Data exported successfully!');
   };
+  */
 
   return (
     <div style={{ 
@@ -304,14 +318,14 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
       {/* 🏷️ Header */}
       <header style={{ 
         padding: '1rem', 
-        backgroundColor: '#232F3E', 
+        backgroundColor: '#002b4b', 
         color: 'white',
         borderBottom: '2px solid #FF9900'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1 style={{ margin: 0, fontSize: '1.5rem' }}>
-              📄 Stage 1: Minimal Data Room
+              📄 Data Room | Onboarding
             </h1>
             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', opacity: 0.8 }}>
               👤 {user.signInDetails?.loginId} | 
@@ -320,90 +334,108 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
             </p>
           </div>
           
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button
-              onClick={debugStage1}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: '#17A2B8',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '0.9rem'
-              }}
-            >
-              🔍 Debug S1
-            </button>
-            
-            <button
-              onClick={forceRefresh}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: '#6F42C1',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '0.9rem'
-              }}
-            >
-              🔄 Refresh
-            </button>
-            
-            <button
-              onClick={exportData}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: '#28A745',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '0.9rem'
-              }}
-            >
-              💾 Export
-            </button>
-            
-            <button
-              onClick={signOut}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: '#DC3545',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: 'bold'
-              }}
-            >
-              🚪 Sign Out
-            </button>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              {/* 
+              <button
+                onClick={debugStage1}
+                style={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: '#17A2B8',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                🔍 Debug S1
+              </button>
+              */}
+              
+              <button
+                onClick={forceRefresh}
+                style={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: '#32b2e7',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                🔄 Refresh
+              </button>
+              
+              {/* 
+              <button
+                onClick={exportData}
+                style={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: '#28A745',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                💾 Export
+              </button>
+              */}
+              
+              <button
+                onClick={signOut}
+                style={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: '#DC3545',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                🚪 Sign Out
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
-          {['upload', 'documents'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab as 'upload' | 'documents')}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: activeTab === tab ? '#FF9900' : 'transparent',
-                color: 'white',
-                border: '1px solid #FF9900',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                textTransform: 'capitalize'
-              }}
-            >
-              {tab === 'upload' && '📁 Upload Files'}
-              {tab === 'documents' && '📄 My Documents'}
-            </button>
-          ))}
+        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {['upload', 'documents'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab as 'upload' | 'documents')}
+                style={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: activeTab === tab ? '#FF9900' : 'transparent',
+                  color: 'white',
+                  border: '1px solid #FF9900',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  textTransform: 'capitalize'
+                }}
+              >
+                {tab === 'upload' && '📁 Upload Files'}
+                {tab === 'documents' && '📄 My Documents'}
+              </button>
+            ))}
+          </div>
+          
+          <img 
+            src="/TOKNAR-02-WHITE.png" 
+            alt="Toknar Logo" 
+            style={{ 
+              height: '40px',
+              width: 'auto',
+              objectFit: 'contain'
+            }} 
+          />
         </div>
       </header>
 
@@ -417,7 +449,7 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
               backgroundColor: '#F8F9FA',
               borderBottom: '1px solid #DEE2E6'
             }}>
-              <strong style={{ color: '#232F3E' }}>📁 Document Upload</strong>
+              <strong style={{ color: '#002b4b' }}>📁 Document Upload</strong>
               <span style={{ marginLeft: '1rem', color: '#6C757D', fontSize: '0.9rem' }}>
                 Upload files securely to your data room
               </span>
@@ -506,7 +538,7 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
                     }}
                   >
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 'bold', color: '#232F3E' }}>
+                      <div style={{ fontWeight: 'bold', color: '#002b4b' }}>
                         📄 {doc.name}
                       </div>
                       <div style={{ fontSize: '0.9rem', color: '#6C757D', marginTop: '0.25rem' }}>
