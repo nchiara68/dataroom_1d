@@ -17,22 +17,22 @@ const components = {
     return (
       <div style={{ 
         textAlign: 'center', 
-        padding: '3rem 1rem 1rem 1rem',
+        padding: '2rem 1rem 1rem 1rem',
         backgroundColor: '#002b4b',
         color: 'white'
       }}>
         <img 
-          src="/TOKNAR-02-WHITE.png" 
+          src="/toknar-logo.svg" 
           alt="Toknar Logo" 
           style={{ 
-            height: '96px',
+            height: '48px',
             width: 'auto',
             marginBottom: '1rem',
             objectFit: 'contain'
           }} 
         />
         <h1 style={{ margin: 0, fontSize: '1.8rem' }}>
-          📄 Data Room | Onboarding 
+          📄 Data Room - Onboarding
         </h1>
         <p style={{ margin: '0.5rem 0 0 0', opacity: 0.8 }}>
           Secure file uploads and management
@@ -48,7 +48,7 @@ const components = {
         fontSize: '0.8rem',
         color: '#6C757D'
       }}>
-        📄 Data Room | Onboarding | Toknar © 2025
+         📄 Data Room | Onboarding | Toknar © 2025
       </div>
     );
   }
@@ -122,7 +122,6 @@ function Stage1Interface() {
           const { data: documents } = await client.models.Document.list({
             filter: { owner: { eq: user.username } }
           });
-          console.log('🔄 Refreshed documents from DB:', documents);
           setUploadedFiles(documents as DocumentType[]);
         } catch (error) {
           console.error('Error refreshing uploaded files:', error);
@@ -210,7 +209,6 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
         const { data: documents } = await client.models.Document.list({
           filter: { owner: { eq: user.username } }
         });
-        console.log('📄 Loaded documents from DB:', documents);
         setUploadedFiles(documents as DocumentType[]);
       } catch (error) {
         console.error('Error loading uploaded files:', error);
@@ -227,44 +225,41 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
 
   // 📁 Handle successful file upload
   const handleUploadSuccess = async (event: UploadEvent) => {
-    console.log('📁 Upload success event:', event);
+    console.log('📁 File uploaded successfully:', event);
     
     try {
-      const fileKey = event.key || 'unknown';
+      const fileKey = event.key || event.result?.key || 'unknown';
       const fileName = fileKey.split('/').pop() || 'Unknown';
       const fileExtension = fileName.split('.').pop()?.toUpperCase() || 'UNKNOWN';
-      
-      console.log('📁 Creating document:', fileName);
+      const fileSize = event.size || event.result?.size || 0;
       
       const docResult = await client.models.Document.create({
         name: fileName,
         key: fileKey,
-        size: 0, // Temporarily set to 0 until we fix size capture
+        size: fileSize,
         type: fileExtension,
         uploadedAt: new Date().toISOString(),
         status: 'uploaded',
         owner: user.username
       });
 
-      console.log('📁 Document saved to DB:', docResult.data);
+      console.log('📁 Document created successfully:', docResult);
 
-      // Update user profile document count only
-      const currentFiles = await client.models.Document.list({
-        filter: { owner: { eq: user.username } }
-      });
-      
-      const totalDocuments = currentFiles.data.length;
-      
       if (userProfile) {
         await client.models.UserProfile.update({
           id: userProfile.id,
-          totalDocuments: totalDocuments,
-          storageUsed: 0, // Temporarily set to 0
+          totalDocuments: (userProfile.totalDocuments || 0) + 1,
+          storageUsed: (userProfile.storageUsed || 0) + fileSize,
           lastActiveAt: new Date().toISOString()
         });
       }
 
       forceRefresh();
+      
+      alert(`✅ File uploaded successfully! 
+
+📄 ${fileName} (${Math.round(fileSize / 1024)} KB)
+🎯 Ready for access in the documents tab`);
     } catch (error) {
       console.error('Error creating document record:', error);
       alert('❌ Upload failed to create database record. Check console for details.');
@@ -277,23 +272,6 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
     
     try {
       await client.models.Document.delete({ id: document.id });
-      
-      // Update document count only
-      const remainingFiles = await client.models.Document.list({
-        filter: { owner: { eq: user.username } }
-      });
-      
-      const totalDocuments = remainingFiles.data.length;
-      
-      if (userProfile) {
-        await client.models.UserProfile.update({
-          id: userProfile.id,
-          totalDocuments: totalDocuments,
-          storageUsed: 0, // Temporarily set to 0
-          lastActiveAt: new Date().toISOString()
-        });
-      }
-      
       forceRefresh();
       
       alert(`✅ "${document.name}" deleted successfully!`);
@@ -347,11 +325,12 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1 style={{ margin: 0, fontSize: '1.5rem' }}>
-              📄 Data Room | Onboarding 
+              📄 Data Room | Onboarding
             </h1>
             <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', opacity: 0.8 }}>
               👤 {user.signInDetails?.loginId} | 
-              📄 {uploadedFiles.length} documents
+              📄 {userProfile?.totalDocuments || 0} documents | 
+              💾 {Math.round((userProfile?.storageUsed || 0) / 1024)} KB used
             </p>
           </div>
           
@@ -452,7 +431,7 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
             src="/TOKNAR-02-WHITE.png" 
             alt="Toknar Logo" 
             style={{ 
-              height: '60px',
+              height: '40px',
               width: 'auto',
               objectFit: 'contain'
             }} 
@@ -493,33 +472,33 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
               </div>
 
               <div style={{ marginBottom: '2rem' }}>
-                <h3 style={{ marginBottom: '1rem', textAlign: 'center' }}>Your documents are stored in My Documents</h3>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <div 
-                    onClick={() => setActiveTab('documents')}
-                    style={{
-                      padding: '1rem',
-                      backgroundColor: '#F8F9FA',
-                      borderRadius: '8px',
-                      textAlign: 'center',
-                      border: '2px solid #32b2e7',
-                      minWidth: '150px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.backgroundColor = '#E3F2FD';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.backgroundColor = '#F8F9FA';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
-                  >
+                <h3 style={{ marginBottom: '1rem' }}>📊 Your Storage Stats</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+                  <div style={{
+                    padding: '1rem',
+                    backgroundColor: '#F8F9FA',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    border: '2px solid #007BFF'
+                  }}>
                     <div style={{ fontSize: '1.5rem' }}>📄</div>
-                    <div style={{ fontWeight: 'bold', color: '#32b2e7' }}>Documents</div>
+                    <div style={{ fontWeight: 'bold', color: '#007BFF' }}>Documents</div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                      {uploadedFiles.length}
+                      {userProfile?.totalDocuments || 0}
+                    </div>
+                  </div>
+                  
+                  <div style={{
+                    padding: '1rem',
+                    backgroundColor: '#F8F9FA',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    border: '2px solid #28A745'
+                  }}>
+                    <div style={{ fontSize: '1.5rem' }}>💾</div>
+                    <div style={{ fontWeight: 'bold', color: '#28A745' }}>Storage Used</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                      {Math.round((userProfile?.storageUsed || 0) / 1024)} KB
                     </div>
                   </div>
                 </div>
@@ -563,7 +542,8 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
                         📄 {doc.name}
                       </div>
                       <div style={{ fontSize: '0.9rem', color: '#6C757D', marginTop: '0.25rem' }}>
-                        {doc.type} • {doc.uploadedAt && new Date(doc.uploadedAt).toLocaleDateString()}
+                        {doc.type} • {Math.round((doc.size || 0) / 1024)} KB • 
+                        {doc.uploadedAt && new Date(doc.uploadedAt).toLocaleDateString()}
                       </div>
                       <div style={{ 
                         fontSize: '0.8rem', 
@@ -610,10 +590,11 @@ System Status: ${documents.length > 0 || profiles.length > 0 ? '🎯 READY' : '�
         color: '#6C757D'
       }}>
         <div>
-          🎯 <strong>Stage 1 Complete</strong> • Next: Stage 2 Enhanced UI/UX • Toknar © 2025
+          🎯 <strong>Stage 1 Complete</strong> • Next: Stage 2 Enhanced UI/UX
         </div>
         <div>
           📄 Documents: {uploadedFiles.length} | 
+          💾 Storage: {Math.round((userProfile?.storageUsed || 0) / 1024)} KB |
           👤 User: {user.signInDetails?.loginId?.split('@')[0]}
         </div>
       </footer>
